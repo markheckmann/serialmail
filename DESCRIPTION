@@ -1,0 +1,20 @@
+Package: serialmail
+Maintainer: Mark Heckmann <heckmann.mark@gmail.com>
+License: GPL (>= 2)
+Title: serialmail - create a series of mails from a textfile template
+Type: Package
+LazyLoad: yes
+Author: Mark Heckmann
+Description: serialmail - create a series of mails from a textfile template
+Version: 0.1
+Date: 2012-04-24
+Language: de
+Depends:
+    xlsx,
+    xlsxjars,
+    rJava,
+    stringr,
+    tcltk
+Collate:
+    'utils.R'
+    'serialmail.R'
