@@ -8,7 +8,7 @@ Author: Mark Heckmann
 Description: serialmail - create a series of mails from a textfile template
 Version: 0.1
 Date: 2012-04-24
-Language: de
+Language: en
 Depends:
     xlsx,
     xlsxjars,

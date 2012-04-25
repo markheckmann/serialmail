@@ -73,8 +73,9 @@ strip_tags <- function(x, intag="<<", outtag=">>"){
 # extract all tags used in template file
 #
 get_template_tags <- function(txt, intag="<<", outtag=">>")
-{
-  tags <- str_extract_all(txt, "[<<](.+?)[>>]")  # retrieve all tags in template 
+{ 
+  pattern <- paste(intag, "(.+?)", outtag, sep="")
+  tags <- str_extract_all(txt, pattern)  # retrieve all tags in template 
   unlist(tags)
 }
 
@@ -82,8 +83,8 @@ get_template_tags <- function(txt, intag="<<", outtag=">>")
 # check if all tags in template file are
 # contained in data file
 #
-check_values_for_tags_in_template <- function(tags, data){
-  tags.inner <- strip_tags(tags)
+check_values_for_tags_in_template <- function(tags, data, intag="<<", outtag=">>"){
+  tags.inner <- strip_tags(tags, intag, outtag)
   tags.defined <- tags.inner %in% names(data) 
   if (any(!tags.defined))
     warning("no data for the following tags: ", 
@@ -104,8 +105,8 @@ make_pairs_list <- function(x, intag="<<", outtag=">>"){
 # parse template file and replace tags by corresponding
 # tag data from data file
 #
-replace_tags_by_value <- function(pair, template){
-  tags <- get_template_tags(template)
+replace_tags_by_value <- function(pair, template, intag="<<", outtag=">>"){
+  tags <- get_template_tags(template, intag, outtag)
   avail.tags <- names(pair)
   tags.exist <- tags %in% avail.tags
   txt <- template  
@@ -119,8 +120,9 @@ replace_tags_by_value <- function(pair, template){
 
 # extract mail adress from data pair
 #
-get_email <- function(pair){
-  x <- pair[1, "<<email>>"]
+get_email <- function(pair, intag="<<", outtag=">>"){
+  emailcolumn <- paste(intag, "email", outtag, sep="")
+  x <- pair[1, emailcolumn]
   if (is.null(x))
     message("email adress is missing")
   x
@@ -188,27 +190,33 @@ prepare_all_emails <- function(msgs, emails, subject= "course feedback"){
 #' @param output    String. Type of output. Default is to generate an \code{"email"}.
 #'                  Currently not used.
 #' @param subject   Subject line of email, default is \code{"subject line"}.
-#'
-#' @author    Mark Heckmann 
+#' @param intag     String. The opening signs for tags. The default is \code{<<}. Be careful 
+#'                  not to use sign that have a special meaning in regular expressions.
+#' @param outtag    String. The closing sign for tags. The default is \code{>>}. Be careful 
+#'                  not to use signs that have a special meaning in regular expressions.
+#' @author          Mark Heckmann 
 #' @export  
 #' @examples \dontrun{
 #'
 #'  # download the files template.txt and data.csv from github dowload page
 #'  serialmail("template.txt", "data.csv")
 #' }
-#'
-serialmail <- function(tfile, dfile, output="email", subject="subject line")
+#' 
+# opening sins for parsed tags 
+# closing sins for parsed tags
+serialmail <- function(tfile, dfile, output="email", subject="subject line",
+                       intag="<<", outtag=">>")
 { 
-  intag <- "<<"                                         # opening sins for parsed tags 
-  outtag <- ">>"                                        # closing sins for parsed tags   
-  template <- read_template_file(tfile)                 # 1) read template 
-  tags <- get_template_tags(template)                   # 2) get template tags   
-  data <- read_data_file(dfile)                         # 3) read data file  
-  check_values_for_tags_in_template(tags, data)         # 4) check if all tags have values  
+  template <- read_template_file(tfile)                   # 1) read template 
+  tags <- get_template_tags(template, intag, outtag)      # 2) get template tags   
+  data <- read_data_file(dfile)                           # 3) read data file  
+  check_values_for_tags_in_template(tags, data, 
+                                    intag, outtag)        # 4) check if all tags have values  
   pairlist <- make_pairs_list(data, intag, outtag)                  
-  text.parsed <- lapply(pairlist, replace_tags_by_value, template)    # 5) parse text and overwrite tags 
-  if (output == "email") {                                            # 6) prepare emails etc.    
-    emails <- lapply(pairlist, get_email)  
+  text.parsed <- lapply(pairlist, replace_tags_by_value, 
+                        template, intag, outtag)          # 5) parse text and overwrite tags 
+  if (output == "email") {                                # 6) prepare emails etc.    
+    emails <- lapply(pairlist, get_email, intag, outtag)  
     prepare_all_emails(text.parsed, emails, subject= subject)
   }
   invisible()

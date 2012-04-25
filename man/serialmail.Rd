@@ -3,7 +3,7 @@
 \title{Creates a series of emails from a textfile template.}
 \usage{
   serialmail(tfile, dfile, output = "email",
-    subject = "subject line")
+    subject = "subject line", intag = "<<", outtag = ">>")
 }
 \arguments{
   \item{tfile}{Path to template file. Must be a \code{.txt}
@@ -20,6 +20,14 @@
 
   \item{subject}{Subject line of email, default is
   \code{"subject line"}.}
+
+  \item{intag}{String. The opening signs for tags. The
+  default is \code{<<}. Be careful not to use sign that
+  have a special meaning in regular expressions.}
+
+  \item{outtag}{String. The closing sign for tags. The
+  default is \code{>>}. Be careful not to use signs that
+  have a special meaning in regular expressions.}
 }
 \description{
   A plain textfile (\code{.txt}) is used as a template to
