@@ -22,7 +22,7 @@
   \code{"subject line"}.}
 
   \item{intag}{String. The opening signs for tags. The
-  default is \code{<<}. Be careful not to use sign that
+  default is \code{<<}. Be careful not to use signs that
   have a special meaning in regular expressions.}
 
   \item{outtag}{String. The closing sign for tags. The
@@ -32,17 +32,19 @@
 \description{
   A plain textfile (\code{.txt}) is used as a template to
   create emails. The textfile may contain any number of
-  arbitrary tags of the form \code{<<tag>>}. The tenplate
-  is parsed and the tags are replaced with values taken
-  from a data file. The data is contained in an Excel
-  (\code{.xlsx}) or comma seperated value \code{.csv}.
-  Based on these files an email for each line of data in
-  the data file is created using the default email program.
+  arbitrary tags of the form \code{<<tag>>}. The template
+  is parsed and the tags are replaced by values taken from
+  a data file. The data is contained in an Excel
+  (\code{.xlsx}) or comma seperated value \code{.csv} file.
+  Based on these two files an email for each line of the
+  data in the data file is created using the default email
+  program.
 }
 \section{Template textfile}{
-  The template file contains plain text and tags wrapped in
-  braces <<tag>>. Any tag can be used as long as it appears
-  in the data file. An example:
+  The template file contains plain text and tags using
+  double braces as indication for a tag<<tag>>. Any tag
+  name can be used as long as it appears in the header of
+  the data file. An example:
 
   \code{Hello <<name>>, your exam mark is <<mark>>. Best,
   Mark.}
