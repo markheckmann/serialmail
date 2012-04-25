@@ -16,5 +16,7 @@ Start to generate emails from the files:
     library(serialmail)
     serialmail("template.txt", "data.csv")     
     # or   
-    serialmail("template.txt", "data.xlsx") 
+    serialmail("template.txt", "data.xlsx")
+    # or for interactive file selection
+    serialmail() 
     
